@@ -1,35 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#16161a"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f6efdf"><meta name="apple-mobile-web-app-capable" content="yes">
 <title>LoL Connect</title>
 <style>
-:root{--bg:#16161a;--card:#202026;--line:#2c2c35;--tx:#f2f2f5;--mu:#8b8b98;--ac:#8b6cf0;--ac2:#f0764a}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif;max-width:480px;margin:auto;min-height:100vh;padding-bottom:70px}
-button,input,textarea{font:inherit;color:inherit}
-.btn{background:var(--ac);border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
-.btn.g{background:var(--card);border:1px solid var(--line)}.btn.sm{padding:6px 12px;font-size:13px}
-input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px;margin:5px 0}
-.pad{padding:14px}.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}.mu{color:var(--mu);font-size:13px}
-.logo{font-size:34px;font-weight:800;background:linear-gradient(90deg,#ec5f7b,var(--ac2));-webkit-background-clip:text;color:transparent}
-.av{border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex:none;background-size:cover}
-.av img{width:100%;height:100%;object-fit:cover}
-.post{background:var(--card);margin:10px 12px;border-radius:14px;overflow:hidden}
-.post .m{width:100%;max-height:420px;object-fit:cover;display:block;background:#000}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1b1b20;border-top:1px solid var(--line);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
-nav a{flex:1;text-align:center;font-size:12px;color:var(--mu);cursor:pointer}nav a b{display:block;font-size:20px}nav a.on{color:var(--ac2)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.grid>*{aspect-ratio:1;object-fit:cover;width:100%;background:#000}
-.stats{display:flex;justify-content:space-around;text-align:center;margin:14px 0}.stats b{display:block;font-size:19px}
-.hero{padding:20px 16px 8px;background-size:cover;background-position:center;position:relative}
-.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,var(--bg))}.hero>*{position:relative}
-.sheet-bg{position:fixed;inset:0;background:#0009;z-index:9;display:flex;align-items:flex-end;justify-content:center}
-.sheet{width:100%;max-width:480px;background:var(--card);border-radius:22px 22px 0 0;overflow:hidden;position:relative}
-.sheet .in{padding:20px;background-size:cover;background-position:center;position:relative}
-.sheet .in::before{content:"";position:absolute;inset:0;background:#0007}.sheet .in>*{position:relative}
-.items{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
-.item{background:var(--card);border-radius:14px;overflow:hidden}.item img{width:100%;height:150px;object-fit:cover}.item div{padding:10px}
-.err{color:#ff7a7a;font-size:13px;min-height:18px}.tabs{display:flex;gap:8px;padding:0 12px 6px}
+:root{color-scheme:light;--bg:#f6efdf;--card:#fffdf8;--line:#eadfcd;--tx:#35251e;--mu:#88786c;--ac:#e97563;--ac2:#f09a55;--nav:#fffcf5;--input:#f3eadc}:root[data-theme="dark"]{color-scheme:dark;--bg:#1b1e20;--card:#2a2e30;--line:#3a3e40;--tx:#f7f4ef;--mu:#a5a6a2;--ac:#ef6877;--ac2:#f18a50;--nav:#222628;--input:#33383a}*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}html{background:var(--bg)}body{background:radial-gradient(ellipse at 100% 15%,#efcda655,transparent 36%),var(--bg);color:var(--tx);font:15px/1.45 system-ui,sans-serif;max-width:480px;margin:auto;min-height:100vh;padding-bottom:calc(78px + env(safe-area-inset-bottom))}button,input,textarea{font:inherit;color:inherit}.btn{background:linear-gradient(110deg,var(--ac),var(--ac2));color:white;border:0;border-radius:12px;padding:11px 16px;font-weight:700}.btn.g{background:var(--card);color:var(--tx);border:1px solid var(--line)}.btn.sm{padding:7px 12px;font-size:13px}input,textarea{width:100%;background:var(--input);border:1px solid var(--line);border-radius:12px;padding:12px;margin:5px 0}.pad{padding:14px}.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}.mu{color:var(--mu);font-size:13px}.logo{font-size:30px;font-weight:900;letter-spacing:-2px;background:linear-gradient(100deg,#e65d7c,var(--ac2));-webkit-background-clip:text;color:transparent}.av{border-radius:50%;background:linear-gradient(130deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex:none;background-size:cover;color:white}.av img{width:100%;height:100%;object-fit:cover}.post{background:var(--card);border:1px solid var(--line);box-shadow:0 8px 24px #6b3e1817;border-radius:18px;overflow:hidden}.post .m{width:100%;height:145px;object-fit:cover;display:block;background:#222}.feed-head{padding:12px 16px 4px}.topline{display:flex;align-items:center;gap:8px}.searchbox{position:relative;flex:1}.searchbox input{height:38px;border:0;border-radius:22px;margin:0;padding:0 10px 0 32px;background:var(--input);font-size:13px}.searchbox:before{content:"⌕";position:absolute;left:11px;top:3px;color:var(--mu);font-size:22px}.icon-btn{border:0;background:transparent;font-size:20px;padding:4px;position:relative}.dot{position:absolute;width:7px;height:7px;background:var(--ac);border-radius:50%;right:3px;top:3px}.home-title{font-size:22px;font-weight:850;margin:14px 0 12px}.quick-actions{display:flex;justify-content:space-around;gap:5px;margin:0 12px 10px;padding:12px 5px;background:var(--card);border:1px solid #fff9;border-radius:20px;box-shadow:0 8px 24px #6b3e1817}.quick{border:0;background:transparent;min-width:52px;color:var(--tx);font-size:12px}.quick i{width:42px;height:42px;margin:0 auto 5px;display:grid;place-items:center;border-radius:50%;font-style:normal;color:white;font-size:20px;background:linear-gradient(140deg,var(--ac),var(--ac2))}.quick:nth-child(2) i{background:linear-gradient(140deg,#d9b59a,#a55d50)}.quick:nth-child(3) i{background:linear-gradient(140deg,#ed7d73,#b95553)}.quick:nth-child(4) i{background:linear-gradient(140deg,#eeb28d,#bc665d)}.feed-row{display:grid;grid-auto-columns:minmax(205px,68%);grid-auto-flow:column;gap:10px;overflow-x:auto;padding:2px 12px 10px;scroll-snap-type:x mandatory;scrollbar-width:none}.feed-row .post{scroll-snap-align:start}.post .pad{padding:9px 10px}.post-caption{font-size:12px;line-height:1.35;min-height:32px}.post-user{color:var(--ac);font-size:14px}.post-actions{display:flex;justify-content:space-between;padding:0 10px 10px;color:var(--mu);font-size:12px}nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--nav);border-top:1px solid var(--line);display:flex;padding:7px 0 calc(7px + env(safe-area-inset-bottom));z-index:5}nav a{flex:1;text-align:center;font-size:11px;color:var(--mu);cursor:pointer}nav a b{display:block;font-size:20px;line-height:24px}nav a.on{color:var(--ac2)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.grid>*{aspect-ratio:1;object-fit:cover;width:100%;background:#000}.stats{display:flex;justify-content:space-around;text-align:center;margin:14px 0}.stats b{display:block;font-size:19px}.hero{padding:20px 16px 8px;background-size:cover;background-position:center;position:relative}.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,var(--bg))}.hero>*{position:relative}.sheet-bg{position:fixed;inset:0;background:#0009;z-index:9;display:flex;align-items:flex-end;justify-content:center}.sheet{width:100%;max-width:480px;background:var(--card);border-radius:22px 22px 0 0;overflow:hidden;position:relative}.sheet .in{padding:20px;background-size:cover;background-position:center;position:relative}.sheet .in::before{content:"";position:absolute;inset:0;background:#0007}.sheet .in>*{position:relative}.items{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}.item{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.item img{width:100%;height:150px;object-fit:cover}.item div{padding:10px}.err{color:#ff6464;font-size:13px;min-height:18px}.tabs{display:flex;gap:8px;padding:0 12px 6px}.splash{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 100% 100%,#efcda655,transparent 32%),var(--bg);display:grid;place-items:center;text-align:center}.splash-mark{font-size:78px;font-weight:950;line-height:1;letter-spacing:-8px;background:linear-gradient(110deg,#e65d7c,#f2a052);-webkit-background-clip:text;color:transparent}.spinner{width:34px;height:34px;border:3px solid #df8b7b55;border-top-color:var(--ac);border-radius:50%;animation:spin .9s linear infinite;margin:42px auto 0}@keyframes spin{to{transform:rotate(360deg)}}.feed-label{padding:0 16px 7px;font-size:12px;font-weight:700;color:var(--mu);letter-spacing:.7px;text-transform:uppercase}.empty{padding:22px 14px;text-align:center;color:var(--mu);background:var(--card);border:1px solid var(--line);border-radius:16px}
 </style></head><body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -39,11 +14,14 @@ const SUPABASE_URL="https://gjsvnrlxcqxlxuykwarb.supabase.co", SUPABASE_KEY="eyJ
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=s=>document.querySelector(s), A=$('#app'), WEEK=6048e5, LK='lol_last';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let me=null,tab='home';
+let me=null,tab='home',darkMode=localStorage.getItem('lol_theme')==='dark';
+document.documentElement.dataset.theme=darkMode?'dark':'light';
+function setTheme(){darkMode=!darkMode;localStorage.setItem('lol_theme',darkMode?'dark':'light');document.documentElement.dataset.theme=darkMode?'dark':'light';if(me&&tab==='home')feed()}
 const touch=()=>localStorage.setItem(LK,Date.now());
 let tt=0;addEventListener('click',()=>{if(Date.now()-tt>6e4){tt=Date.now();if(me)touch()}});
 
 async function boot(){
+  splashView();await new Promise(r=>setTimeout(r,650));
   let {data:{session}}=await sb.auth.getSession();
   const last=+localStorage.getItem(LK)||0;
   if(session&&last&&Date.now()-last>WEEK){await sb.auth.signOut();session=null}  // 7 days inactive -> login again
@@ -53,7 +31,7 @@ async function boot(){
 async function loadMe(){const {data}=await sb.auth.getUser();
   ({data:me}=await sb.from('profiles').select('*, item:shop_items!equipped_item(image_url)').eq('id',data.user.id).single())}
 
-function authView(mode='in'){
+function splashView(){A.innerHTML=`<div class="splash"><div><div class="splash-mark">LoL</div><div style="letter-spacing:5px;font-size:20px">CONNECT</div><div class="spinner"></div></div></div>`}function authView(mode='in'){
   A.innerHTML=`<div class="pad" style="padding-top:12vh;text-align:center"><div class="logo" style="font-size:54px">LoL</div><div class="mu" style="letter-spacing:4px;margin-bottom:26px">CONNECT</div>
   ${mode=='up'?'<input id=u placeholder="Username">':''}<input id=e type=email placeholder="Email"><input id=p type=password placeholder="Password (min 6)">
   <div class=err id=er></div><button class=btn style="width:100%" id=go>${mode=='in'?'Log in':'Create account'}</button>
@@ -75,15 +53,11 @@ function go(t,arg){tab=t;const n=[['home','🏠','Home'],['post','＋','Post'],[
   ({home:feed,post:postView,shop:shopView,me:()=>profileView(me.id)}[t])(arg)}
 
 async function feed(){const v=$('#v');
-  v.innerHTML=`<div class="row sp pad"><span class=logo style="font-size:26px">LoL</span><span class=mu>🪙 ${me.coins}</span></div><div id=f class=mu style="padding:14px">Loading…</div>`;
-  const {data}=await sb.from('posts').select('*, a:profiles!user_id(id,username,avatar_url)').order('created_at',{ascending:false}).limit(50);
-  $('#f').outerHTML=(data||[]).map(p=>`<div class=post><div class="row pad" data-u="${p.a.id}" style="cursor:pointer">${av(p.a,34)}<b>${esc(p.a.username)}</b></div>
-   ${p.media_type=='video'?`<video class=m src="${esc(p.media_url)}" controls playsinline></video>`:`<img class=m src="${esc(p.media_url)}" loading=lazy>`}
-   <div class=pad>${esc(p.caption)}${p.user_id==me.id||me.is_admin?` <a class=mu data-d="${p.id}" style="float:right">delete</a>`:''}</div></div>`).join('')||'<p class="mu pad">No posts yet — be the first!</p>';
-  v.querySelectorAll('[data-u]').forEach(e=>e.onclick=()=>miniDash(e.dataset.u));
-  v.querySelectorAll('[data-d]').forEach(e=>e.onclick=async()=>{if(confirm('Delete post?')){await sb.from('posts').delete().eq('id',e.dataset.d);feed()}})}
-
-async function upload(bucket,file){const path=`${me.id}/${Date.now()}_${file.name.replace(/[^\w.]/g,'')}`;
+  v.innerHTML=`<div class="feed-head"><div class="topline"><span class="logo">LoL</span><label class="searchbox"><input id="feed-search" placeholder="Search"></label><button class="icon-btn" id="theme-btn" aria-label="Toggle theme">${darkMode?'☀️':'🌙'}</button><button class="icon-btn" id="bell-btn" aria-label="Notifications">🔔<i class="dot"></i></button><button class="icon-btn" id="me-btn" aria-label="Profile"></button></div><h1 class="home-title">HOME</h1></div><div class="quick-actions"><button class="quick" data-compose="post"><i>⊙</i>Post</button><button class="quick" data-compose="blog"><i>✎</i>Blog</button><button class="quick" data-compose="vlog"><i>▣</i>Vlog</button><button class="quick" data-compose="photos"><i>▧</i>Photos</button></div><div class="feed-label">Latest posts</div><div id="f" class="feed-row"><div class="empty">Loading your feed…</div></div>`;
+  $('#me-btn').innerHTML=av(me,30);$('#me-btn').onclick=()=>go('me');$('#theme-btn').onclick=setTheme;$('#bell-btn').onclick=()=>alert('You’re all caught up.');document.querySelectorAll('[data-compose]').forEach(b=>b.onclick=()=>go('post'));
+  const {data,error}=await sb.from('posts').select('*, a:profiles!user_id(id,username,avatar_url)').order('created_at',{ascending:false}).limit(50);
+  const rows=data||[];const render=list=>{const host=$('#f');if(!host)return;host.innerHTML=list.map(p=>`<article class="post"><div class="row pad" data-u="${p.a.id}" style="cursor:pointer">${av(p.a,30)}<b class="post-user">${esc(p.a.username)}</b><span class="mu" style="margin-left:auto">•••</span></div>${p.media_type=='video'?`<video class="m" src="${esc(p.media_url)}" controls playsinline></video>`:`<img class="m" src="${esc(p.media_url)}" loading="lazy">`}<div class="pad post-caption">${esc(p.caption)}${p.user_id==me.id||me.is_admin?` <a class="mu" data-d="${p.id}" style="float:right">delete</a>`:''}</div><div class="post-actions"><span>♥ &nbsp; ${esc(p.a.username)}</span><span>♡ &nbsp; Memories</span></div></article>`).join('')||'<div class="empty">No posts yet — be the first!</div>';host.querySelectorAll('[data-u]').forEach(e=>e.onclick=()=>miniDash(e.dataset.u));host.querySelectorAll('[data-d]').forEach(e=>e.onclick=async()=>{if(confirm('Delete post?')){await sb.from('posts').delete().eq('id',e.dataset.d);feed()}})};
+  render(rows);$('#feed-search').oninput=e=>{const q=e.target.value.trim().toLowerCase();render(rows.filter(p=>(p.caption||'').toLowerCase().includes(q)||(p.a?.username||'').toLowerCase().includes(q)))};if(error)$('#f').innerHTML='<div class="empty">Could not load the feed. Please try again.</div>'}async function upload(bucket,file){const path=`${me.id}/${Date.now()}_${file.name.replace(/[^\w.]/g,'')}`;
   const {error}=await sb.storage.from(bucket).upload(path,file);if(error)throw error;
   return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
 
