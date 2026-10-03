@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16161a"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>LoL Connect</title>
+<style>
+:root{--bg:#16161a;--card:#202026;--line:#2c2c35;--tx:#f2f2f5;--mu:#8b8b98;--ac:#8b6cf0;--ac2:#f0764a}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--tx);font:15px system-ui,sans-serif;max-width:480px;margin:auto;min-height:100vh;padding-bottom:70px}
+button,input,textarea{font:inherit;color:inherit}
+.btn{background:var(--ac);border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn.g{background:var(--card);border:1px solid var(--line)}.btn.sm{padding:6px 12px;font-size:13px}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px;margin:5px 0}
+.pad{padding:14px}.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}.mu{color:var(--mu);font-size:13px}
+.logo{font-size:34px;font-weight:800;background:linear-gradient(90deg,#ec5f7b,var(--ac2));-webkit-background-clip:text;color:transparent}
+.av{border-radius:50%;background:var(--ac);display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex:none;background-size:cover}
+.av img{width:100%;height:100%;object-fit:cover}
+.post{background:var(--card);margin:10px 12px;border-radius:14px;overflow:hidden}
+.post .m{width:100%;max-height:420px;object-fit:cover;display:block;background:#000}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#1b1b20;border-top:1px solid var(--line);display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom))}
+nav a{flex:1;text-align:center;font-size:12px;color:var(--mu);cursor:pointer}nav a b{display:block;font-size:20px}nav a.on{color:var(--ac2)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.grid>*{aspect-ratio:1;object-fit:cover;width:100%;background:#000}
+.stats{display:flex;justify-content:space-around;text-align:center;margin:14px 0}.stats b{display:block;font-size:19px}
+.hero{padding:20px 16px 8px;background-size:cover;background-position:center;position:relative}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,var(--bg))}.hero>*{position:relative}
+.sheet-bg{position:fixed;inset:0;background:#0009;z-index:9;display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:480px;background:var(--card);border-radius:22px 22px 0 0;overflow:hidden;position:relative}
+.sheet .in{padding:20px;background-size:cover;background-position:center;position:relative}
+.sheet .in::before{content:"";position:absolute;inset:0;background:#0007}.sheet .in>*{position:relative}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
+.item{background:var(--card);border-radius:14px;overflow:hidden}.item img{width:100%;height:150px;object-fit:cover}.item div{padding:10px}
+.err{color:#ff7a7a;font-size:13px;min-height:18px}.tabs{display:flex;gap:8px;padding:0 12px 6px}
+</style></head><body><div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// ====== PASTE YOUR SUPABASE VALUES HERE (Project Settings > API) ======
+const SUPABASE_URL="YOUR_SUPABASE_URL", SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+// =====================================================================
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=s=>document.querySelector(s), A=$('#app'), WEEK=6048e5, LK='lol_last';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let me=null,tab='home';
+const touch=()=>localStorage.setItem(LK,Date.now());
+let tt=0;addEventListener('click',()=>{if(Date.now()-tt>6e4){tt=Date.now();if(me)touch()}});
+
+async function boot(){
+  let {data:{session}}=await sb.auth.getSession();
+  const last=+localStorage.getItem(LK)||0;
+  if(session&&last&&Date.now()-last>WEEK){await sb.auth.signOut();session=null}  // 7 days inactive -> login again
+  if(!session)return authView();
+  touch();await loadMe();go('home');
+}
+async function loadMe(){const {data}=await sb.auth.getUser();
+  ({data:me}=await sb.from('profiles').select('*, item:shop_items!equipped_item(image_url)').eq('id',data.user.id).single())}
+
+function authView(mode='in'){
+  A.innerHTML=`<div class="pad" style="padding-top:12vh;text-align:center"><div class="logo" style="font-size:54px">LoL</div><div class="mu" style="letter-spacing:4px;margin-bottom:26px">CONNECT</div>
+  ${mode=='up'?'<input id=u placeholder="Username">':''}<input id=e type=email placeholder="Email"><input id=p type=password placeholder="Password (min 6)">
+  <div class=err id=er></div><button class=btn style="width:100%" id=go>${mode=='in'?'Log in':'Create account'}</button>
+  <p class=mu style="margin-top:16px">${mode=='in'?'New here? <a href=# id=sw style="color:var(--ac)">Sign up</a>':'Have an account? <a href=# id=sw style="color:var(--ac)">Log in</a>'}</p></div>`;
+  $('#sw').onclick=e=>{e.preventDefault();authView(mode=='in'?'up':'in')};
+  $('#go').onclick=async()=>{const email=$('#e').value.trim(),password=$('#p').value;let r;
+    if(mode=='in')r=await sb.auth.signInWithPassword({email,password});
+    else{const username=$('#u').value.trim();if(username.length<3)return $('#er').textContent='Username too short';
+      r=await sb.auth.signUp({email,password,options:{data:{username}}})}
+    if(r.error)return $('#er').textContent=r.error.message;
+    if(!r.data.session)return $('#er').textContent='Check your email to confirm, then log in.';
+    boot()}
+}
+
+function av(p,s=40){return `<div class=av style="width:${s}px;height:${s}px;font-size:${s/2.4}px">${p.avatar_url?`<img src="${esc(p.avatar_url)}">`:esc((p.username||'?')[0].toUpperCase())}</div>`}
+function go(t,arg){tab=t;const n=[['home','🏠','Home'],['post','＋','Post'],['shop','🛍','Shop'],['me','👤','Profile']];
+  A.innerHTML=`<div id=v></div><nav>${n.map(x=>`<a class="${x[0]==t?'on':''}" data-t=${x[0]}><b>${x[1]}</b>${x[2]}</a>`).join('')}</nav>`;
+  document.querySelectorAll('nav a').forEach(a=>a.onclick=()=>go(a.dataset.t));
+  ({home:feed,post:postView,shop:shopView,me:()=>profileView(me.id)}[t])(arg)}
+
+async function feed(){const v=$('#v');
+  v.innerHTML=`<div class="row sp pad"><span class=logo style="font-size:26px">LoL</span><span class=mu>🪙 ${me.coins}</span></div><div id=f class=mu style="padding:14px">Loading…</div>`;
+  const {data}=await sb.from('posts').select('*, a:profiles!user_id(id,username,avatar_url)').order('created_at',{ascending:false}).limit(50);
+  $('#f').outerHTML=(data||[]).map(p=>`<div class=post><div class="row pad" data-u="${p.a.id}" style="cursor:pointer">${av(p.a,34)}<b>${esc(p.a.username)}</b></div>
+   ${p.media_type=='video'?`<video class=m src="${esc(p.media_url)}" controls playsinline></video>`:`<img class=m src="${esc(p.media_url)}" loading=lazy>`}
+   <div class=pad>${esc(p.caption)}${p.user_id==me.id||me.is_admin?` <a class=mu data-d="${p.id}" style="float:right">delete</a>`:''}</div></div>`).join('')||'<p class="mu pad">No posts yet — be the first!</p>';
+  v.querySelectorAll('[data-u]').forEach(e=>e.onclick=()=>miniDash(e.dataset.u));
+  v.querySelectorAll('[data-d]').forEach(e=>e.onclick=async()=>{if(confirm('Delete post?')){await sb.from('posts').delete().eq('id',e.dataset.d);feed()}})}
+
+async function upload(bucket,file){const path=`${me.id}/${Date.now()}_${file.name.replace(/[^\w.]/g,'')}`;
+  const {error}=await sb.storage.from(bucket).upload(path,file);if(error)throw error;
+  return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
+
+function postView(){$('#v').innerHTML=`<div class=pad><h3>New post</h3><p class=mu>+1 coin for every post</p><input type=file id=fl accept="image/*,video/*"><textarea id=cp rows=3 placeholder="Caption"></textarea><div class=err id=er></div><button class=btn id=sb style="width:100%">Share</button></div>`;
+  $('#sb').onclick=async()=>{const f=$('#fl').files[0];if(!f)return $('#er').textContent='Choose a photo or video';
+    if(f.size>50e6)return $('#er').textContent='Max 50 MB';$('#sb').disabled=true;$('#er').textContent='Uploading…';
+    try{const url=await upload('media',f);const {error}=await sb.from('posts').insert({user_id:me.id,media_url:url,media_type:f.type.startsWith('video')?'video':'image',caption:$('#cp').value});
+      if(error)throw error;await loadMe();go('home')}catch(e){$('#er').textContent=e.message;$('#sb').disabled=false}}}
+
+async function shopView(){const v=$('#v');
+  const [{data:items},{data:pu}]=await Promise.all([sb.from('shop_items').select('*').order('created_at',{ascending:false}),sb.from('purchases').select('item_id').eq('user_id',me.id)]);
+  const own=new Set((pu||[]).map(x=>x.item_id));
+  v.innerHTML=`<div class="row sp pad"><h3>Shop</h3><b>🪙 ${me.coins}</b></div>
+  ${me.is_admin?`<div class=pad style="background:var(--card);margin:0 12px 12px;border-radius:14px"><b>Admin</b><input id=an placeholder="Item name"><input id=ap type=number placeholder="Price (coins)"><input id=af type=file accept="image/*">
+   <button class="btn sm" id=aa>Add to shop</button><hr style="border-color:var(--line);margin:12px 0"><input id=ae placeholder="Email to make admin"><button class="btn sm g" id=am>Make admin</button><div class=err id=er></div></div>`:''}
+  <div class=items>${(items||[]).map(i=>{const eq=me.equipped_item==i.id;return `<div class=item><img src="${esc(i.image_url)}"><div><b>${esc(i.name)}</b><div class="row sp" style="margin-top:6px">
+   ${own.has(i.id)?`<button class="btn sm ${eq?'g':''}" data-q="${eq?'':i.id}">${eq?'Unequip':'Equip'}</button>`:`<button class="btn sm" data-b="${i.id}">🪙 ${i.price}</button>`}
+   ${me.is_admin?`<a class=mu data-x="${i.id}">✕</a>`:''}</div></div></div>`}).join('')||'<p class="mu pad">Nothing in the shop yet.</p>'}</div>`;
+  v.querySelectorAll('[data-b]').forEach(b=>b.onclick=async()=>{const {data}=await sb.rpc('buy_item',{item:b.dataset.b});if(data!='ok')alert(data);await loadMe();shopView()});
+  v.querySelectorAll('[data-q]').forEach(b=>b.onclick=async()=>{await sb.rpc('equip_item',{item:b.dataset.q||null});await loadMe();shopView()});
+  v.querySelectorAll('[data-x]').forEach(b=>b.onclick=async()=>{if(confirm('Remove item?')){await sb.from('shop_items').delete().eq('id',b.dataset.x);shopView()}});
+  if(me.is_admin){$('#aa').onclick=async()=>{const f=$('#af').files[0],n=$('#an').value,p=+$('#ap').value;if(!f||!n||p<0)return $('#er').textContent='Fill name, price, image';
+      try{const url=await upload('shop',f);const {error}=await sb.from('shop_items').insert({name:n,price:p,image_url:url});if(error)throw error;shopView()}catch(e){$('#er').textContent=e.message}};
+    $('#am').onclick=async()=>{const {data}=await sb.rpc('set_admin',{target_email:$('#ae').value.trim()});$('#er').style.color=data=='ok'?'#7aff9a':'';$('#er').textContent=data=='ok'?'Done — they are now admin':data}}}
+
+async function getProfile(id){const {data}=await sb.from('profiles').select('*, item:shop_items!equipped_item(image_url)').eq('id',id).single();
+  const {count}=await sb.from('posts').select('*',{count:'exact',head:true}).eq('user_id',id);return {p:data,n:count||0}}
+const bgOf=p=>p.item?`style="background-image:url('${esc(p.item.image_url)}')"`:'';
+
+async function miniDash(id){const {p,n}=await getProfile(id);
+  const d=document.createElement('div');d.className='sheet-bg';
+  d.innerHTML=`<div class=sheet><div class=in ${bgOf(p)}><div class=row>${av(p,64)}<div><b style="font-size:18px">${esc(p.username)}</b>${p.is_admin?' <span style="color:#4da3ff">✔</span>':''}<div class=mu style="color:#ddd">${esc(p.bio)}</div></div></div>
+   <div class=stats><div><b>${n}</b>Posts</div><div><b>${p.coins}</b>Coins</div></div></div>
+   <div class="pad row"><button class="btn" style="flex:1" id=vp>View profile</button><button class="btn g" id=cl>Close</button></div></div>`;
+  d.onclick=e=>{if(e.target==d)d.remove()};document.body.append(d);
+  $('#cl').onclick=()=>d.remove();$('#vp').onclick=()=>{d.remove();$('#v').innerHTML='';profileView(id)}}
+
+async function profileView(id){const v=$('#v')||(go('home'),$('#v'));const {p,n}=await getProfile(id);const mine=id==me.id;
+  const {data:posts}=await sb.from('posts').select('*').eq('user_id',id).order('created_at',{ascending:false});
+  v.innerHTML=`<div class=hero ${bgOf(p)}><div class="row sp"><span></span>${mine?'<a id=lo class=mu>Log out</a>':''}</div>
+   <div class=row>${av(p,80)}<div><b style="font-size:20px">${esc(p.username)}</b>${p.is_admin?' <span style="color:#4da3ff">✔</span>':''}<div>${esc(p.bio)}</div></div></div>
+   <div class=stats><div><b>${n}</b>Posts</div><div><b>${p.coins}</b>Coins</div></div>
+   ${mine?'<div class=row><button class="btn sm g" id=eb>Edit bio</button><button class="btn sm g" id=ep>Change photo</button><input type=file id=pf accept="image/*" hidden></div>':''}</div>
+   <div class=grid style="margin-top:12px">${(posts||[]).map(x=>x.media_type=='video'?`<video src="${esc(x.media_url)}" playsinline></video>`:`<img src="${esc(x.media_url)}" loading=lazy>`).join('')}</div>`;
+  if(mine){$('#lo').onclick=async()=>{await sb.auth.signOut();localStorage.removeItem(LK);me=null;authView()};
+    $('#eb').onclick=async()=>{const b=prompt('Your bio',p.bio||'');if(b!==null){await sb.from('profiles').update({bio:b}).eq('id',me.id);await loadMe();profileView(id)}};
+    $('#ep').onclick=()=>$('#pf').click();
+    $('#pf').onchange=async e=>{const f=e.target.files[0];if(f){const u=await upload('media',f);await sb.from('profiles').update({avatar_url:u}).eq('id',me.id);await loadMe();profileView(id)}}}}
+boot();
+</script></body></html>
